@@ -7,7 +7,7 @@ postgresql-master:
     REPLICATION_PASS: ${REPLICATION_PWD}
   labels:
     io.rancher.container.pull_image: always
-    io.rancher.sidekicks: postgresqlmaster-datavolume
+    io.rancher.sidekicks: postgresql-master-datavolume
   tty: true
   image: sameersbn/postgresql:9.4-22
   stdin_open: true
@@ -24,7 +24,7 @@ postgresql-slave:
   labels:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:container_label_ne: io.rancher.stack_service.name=postgresql/postgresqlmaster
-    io.rancher.sidekicks: postgresqlslave-datavolume
+    io.rancher.sidekicks: postgresql-slave-datavolume
   tty: true
   image: sameersbn/postgresql:9.4-22
   stdin_open: true
