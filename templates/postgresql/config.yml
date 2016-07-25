@@ -1,0 +1,5 @@
+name: Postgresql
+description: |
+  Postgresql
+version: 9.4
+category: Persistence
