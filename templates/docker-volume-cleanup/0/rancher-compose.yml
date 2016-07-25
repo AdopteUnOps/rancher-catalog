@@ -1,0 +1,14 @@
+.catalog:
+  name: "Docker Volume Cleanup"
+  version: "latest"
+  description: |
+    "Docker Volume Cleanup removes unused volumes on your cluster hosts."
+  uuid: docker-cleanup-0
+  minimum_rancher_version: v0.3.0
+  questions:
+    - variable: "HOST_LABEL"
+      label: "Host label"
+      description: "Specify a Rancher host label here that will be used to determine where this container will be shipped."
+      type: "string"
+      default: role=apps
+      required: true

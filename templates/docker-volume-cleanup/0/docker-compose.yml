@@ -1,0 +1,11 @@
+docker-volume-cleanup:
+  restart: always
+  image: cloudnautique/vol-cleanup:v0.3.0
+  privileged: true
+  volumes:
+    - /var/lib/docker:/var/lib/docker
+    - /var/run/docker.sock:/var/run/docker.sock
+  labels:
+    io.rancher.container.hostname_override: container_name
+    io.rancher.scheduler.affinity:host_label_soft: ${HOST_LABEL}
+  command: -i 5

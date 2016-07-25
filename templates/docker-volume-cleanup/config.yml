@@ -1,0 +1,5 @@
+name: Docker Volume Clean
+description: |
+  A service that cleans unused volumes on your cluster hosts. Based on cloudnautiques vol-cleanup.
+version: latest
+category: "Docker"
