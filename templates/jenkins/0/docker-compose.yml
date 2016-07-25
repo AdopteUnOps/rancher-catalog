@@ -1,0 +1,28 @@
+jenkins-primary:
+  image: "jenkins:1.651.3"
+  ports:
+    - "8080:8080"
+  labels:
+    io.rancher.sidekicks: jenkins-tools,jenkins-config-scripts,jenkins-plugins,jenkins-datavolume
+    io.rancher.container.hostname_override: container_name
+  volumes_from:
+    - jenkins-config-scripts
+    - jenkins-tools
+    - jenkins-plugins
+    - jenkins-datavolume
+  entrypoint: /usr/share/jenkins/rancher/jenkins.sh
+jenkins-tools:
+  image: jenkins-rancher-compose-tools:latest
+  labels:
+      io.rancher.container.start_once: true
+jenkins-config-scripts:
+  image: rancher-jenkins-startup-scripts:latest
+jenkins-plugins:
+  image: rancher/jenkins-plugins:v0.1.1
+jenkins-datavolume:
+  image: "busybox"
+  volumes:
+    - /var/jenkins_home
+  labels:
+    io.rancher.container.start_once: true
+  entrypoint: ["chown", "-R", "1000:1000", "/var/jenkins_home"]

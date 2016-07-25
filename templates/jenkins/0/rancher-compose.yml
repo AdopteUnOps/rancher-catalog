@@ -1,0 +1,80 @@
+.catalog:
+  name: Jenkins
+  version: 1.642.2-secu-1
+  description: |
+    Jenkins CI management server.
+  questions:
+    - variable: "jenkinsprojectaccount"
+      type: "string"
+      label: "Project username"
+    - variable: "jenkinsprojectpassword"
+      type: "password"
+      label: "Project password"
+    - variable: "plugins"
+      type: "multiline"
+      label: "List of Plugins"
+      description: |
+        List of plugins in the format <plugin_name>[:<version>]
+        one entry per line.
+      default: |
+        workflow-cps-global-lib
+        workflow-step-api
+        mailer
+        momentjs
+        ssh-slaves
+        greenballs
+        swarm
+        plain-credentials
+        pam-auth
+        durable-task
+        matrix-project
+        maven-plugin
+        windows-slaves
+        pipeline-stage-step
+        workflow-aggregator
+        workflow-basic-steps
+        cvs
+        handlebars
+        antisamy-markup-formatter
+        ldap
+        script-security
+        javadoc
+        git-client
+        workflow-api
+        junit
+        branch-api
+        pipeline-build-step
+        matrix-auth
+        icon-shim
+        git-server
+        workflow-support
+        ssh-credentials
+        workflow-job
+        cloudbees-folder
+        scm-api
+        workflow-cps
+        github-oauth
+        credentials-binding
+        pipeline-input-step
+        ant
+        structs
+        subversion
+        pipeline-stage-view
+        git
+        workflow-scm-step
+        translation
+        ace-editor
+        workflow-durable-task-step
+        workflow-multibranch
+        pipeline-rest-api
+        external-monitor-job
+        jquery-detached
+        github-api
+        mapdb-api
+        credentials
+jenkins-primary:
+  metadata:
+    jenkinsprojectaccount: ${jenkinsprojectaccount}
+    jenkinsprojectpassword: ${jenkinsprojectpassword}
+    plugins: |
+      ${plugins}
