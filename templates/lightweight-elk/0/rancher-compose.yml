@@ -55,7 +55,7 @@ nginx-proxy-conf:
       users:
         '0':
           username: admin
-          password: '{PLAIN}p0n3y'
+          password: '{PLAIN}changeme'
 kibana4:
   scale: 1
   metadata:
