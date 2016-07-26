@@ -1,0 +1,105 @@
+.catalog:
+  name: "scalable-ELK"
+  version: "v1.0"
+  description: "Provide a scalable-ELK stack"
+  uuid: scalable-elk-1
+  questions:
+    - variable: cluster_name
+      description: "Unique name to assign to your Elasticsearch cluster."
+      label: "Cluster Name"
+      type: "string"
+      required: true
+      default: "es"
+    - variable: "kopf_port"
+      label: "Public Port"
+      description: "Unique public port for kopf"
+      type: "int"
+      default: 80
+      required: true
+elasticsearch-masters:
+  metadata:
+    elasticsearch:
+      yml:
+        cluster.name: "${cluster_name}"
+        node.name: "$${HOSTNAME}"
+        node.data: "false"
+        node.master: "true"
+        network.host: "_site_"
+elasticsearch-datanodes:
+  metadata:
+    elasticsearch:
+      yml:
+        cluster.name: "${cluster_name}"
+        node.name: "$${HOSTNAME}"
+        node.data: "true"
+        node.master: "false"
+        http.enabled: "false"
+        network.host: "_site_"
+elasticsearch-clients:
+  metadata:
+    elasticsearch:
+      yml:
+       cluster.name: "${cluster_name}"
+       node.name: "$${HOSTNAME}"
+       node.data: "false"
+       node.master: "false"
+       network.host: "_site_"
+logstash-indexer:
+  metadata:
+    logstash:
+      inputs: |
+        redis {
+          host => "redis"
+          port => "6379"
+          data_type => "list"
+          key => "logstash"
+        }
+      filters: |
+        mutate {
+          rename => { "docker.id" => "container_id" }
+          rename => { "docker.name" => "container_name" }
+          rename => { "docker.image" => "docker_image" }
+          rename => { "docker.hostname" => "docker_hostname" }
+        }
+      outputs: |
+        elasticsearch {
+          hosts => ["elasticsearch:9200"]
+        }
+logstash-collector:
+  metadata:
+    logstash:
+      inputs: |
+        udp {
+          port => 5000
+          codec => "json"
+        }
+      outputs: |
+        redis {
+          host => "redis"
+          port => "6379"
+          data_type => "list"
+          key => "logstash"
+        }
+logspout:
+  scale: 1
+kibana-vip:
+  scale: 1
+nginx-proxy-conf:
+  scale: 1
+  metadata:
+    nginx: &id001
+      conf:
+        servername: kibana
+        upstream_port: 5601
+      users:
+        '0':
+          username: admin
+          password: '{PLAIN}changeme'
+kibana4:
+  scale: 1
+  metadata:
+    nginx: *id001
+nginx-proxy:
+  scale: 1
+  metadata:
+    nginx: *id001

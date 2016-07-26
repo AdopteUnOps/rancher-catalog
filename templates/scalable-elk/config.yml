@@ -1,0 +1,5 @@
+name: scalable-ELK
+description: |
+  Provide a scalable ELK stack.
+version: v1.0
+category: ELK
