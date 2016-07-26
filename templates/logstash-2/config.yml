@@ -1,0 +1,5 @@
+name: logstash-2
+description: |
+  Provide a logstash 2 stack.
+version: v2.1.1-1
+category: ELK
