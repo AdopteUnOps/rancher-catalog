@@ -1,0 +1,5 @@
+name: curator
+description: |
+  Provide a curator stack.
+version: v1.0
+category: ELK

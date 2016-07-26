@@ -1,0 +1,22 @@
+.catalog:
+  name: "curator"
+  version: "v1.0"
+  description: "Provide a curator stack"
+  uuid: curator-1
+  questions:
+      - variable: "max_index_age"
+        description: "Max index age"
+        label: "Max index age"
+        type: "string"
+        required: true
+        default: 15
+      - variable: "elasticsearch_link"
+        description: |
+          stack/service link or external service link to elasticsearch
+          cluster.
+        label: "Elasticsearch stack/service"
+        default: "es/elasticsearch-clients"
+        required: true
+        type: "service"
+curator:
+  scale: 1
