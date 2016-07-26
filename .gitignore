@@ -1,0 +1,15 @@
+*.swp
+*.swo
+*~
+.idea
+*.iml
+
+#binaries
+*.gz
+*.tgz
+*.bzip
+*.bz2
+*.zip
+*.iso
+*.tar
+
