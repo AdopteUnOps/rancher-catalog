@@ -1,8 +1,8 @@
 .catalog:
-  name: "ELK"
+  name: "lightweight-ELK"
   version: "v1.0"
-  description: "Provide a ELK stack"
-  uuid: elk-1
+  description: "Provide a lightweight-ELK stack"
+  uuid: lightweight-elk-1
 logstash-indexer:
   metadata:
     logstash:

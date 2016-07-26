@@ -1,0 +1,5 @@
+name: lightweight-ELK
+description: |
+  Provide a lightweight ELK stack.
+version: v1.0
+category: ELK
