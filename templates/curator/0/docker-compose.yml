@@ -1,8 +1,6 @@
 curator:
   links:
   - ${elasticsearch_link}:elasticsearch
-  labels:
-    io.rancher.scheduler.affinity:host_label: role=tools
   environment:
       ELASTICSEARCH_HOST: elasticsearch
       ELASTICSEARCH_PORT: 9200
