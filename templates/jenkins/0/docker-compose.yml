@@ -12,11 +12,11 @@ jenkins-primary:
     - jenkins-datavolume
   entrypoint: /usr/share/jenkins/rancher/jenkins.sh
 jenkins-tools:
-  image: jenkins-rancher-compose-tools:latest
+  image: adopteunops/rancher-compose-tools:latest
   labels:
       io.rancher.container.start_once: true
 jenkins-config-scripts:
-  image: rancher-jenkins-startup-scripts:latest
+  image: adopteunops/rancher-jenkins-startup-scripts:latest
 jenkins-plugins:
   image: rancher/jenkins-plugins:v0.1.1
 jenkins-datavolume:
