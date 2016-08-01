@@ -89,7 +89,6 @@ kibana-vip:
   links:
   - nginx-proxy:nginx-proxy
   stdin_open: true
-  labels:
 nginx-proxy-conf:
   links:
   - elasticsearch:elasticsearch
