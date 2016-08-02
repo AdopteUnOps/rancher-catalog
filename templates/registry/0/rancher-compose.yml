@@ -1,0 +1,30 @@
+.catalog:
+  name: "Docker Registry"
+  version: "1.0.0"
+  description: |
+    "A simple docker registry."
+  uuid: docker-registry-0
+  questions:
+    - variable: "DOCKER_USERNAME"
+      label: "Docker login"
+      description: "Docker login"
+      type: "string"
+      required: true
+    - variable: "DOCKER_PASSWORD"
+      label: "Docker password"
+      description: "Docker password"
+      type: "password"
+      required: true
+    - variable: "FQDN"
+      label: "FQDN"
+      description: "FQDN for the registry"
+      type: "string"
+      required: true
+registry-datavolume:
+  scale: 1
+create-certs:
+  scale: 1
+registry:
+  scale: 1
+registry-auth:
+  scale: 1
