@@ -42,7 +42,7 @@ registry-auth:
   command:
   - htpasswd
   - -cBb
-  - auth/htpasswd
+  - /auth/htpasswd
   - ${DOCKER_USERNAME}
   - ${DOCKER_PASSWORD}
   tty: true
