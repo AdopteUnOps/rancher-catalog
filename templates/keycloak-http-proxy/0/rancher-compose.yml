@@ -9,7 +9,7 @@
       description: "The URL this server is proxying"
       type: "string"
       required: true
-    - variable: "adapter-config"
+    - variable: "adapter_config"
       label: "Adapter config"
       description: "Your application adapter (export it from Installation tab in your client application on keycloak)"
       type: "multiline"
@@ -31,6 +31,6 @@ keycloak-proxy:
   metadata:
     targeturl: ${targeturl}
     adapter-config: |
-      ${adapter-config}
+      ${adapter_config}
     constraints: |
       ${constraints}
