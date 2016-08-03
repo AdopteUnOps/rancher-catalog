@@ -30,5 +30,7 @@ keycloak-proxy:
   scale: 1
   metadata:
     targeturl: ${targeturl}
-    adapter-config: ${adapter-config}
-    constraints: ${constraints}cd
+    adapter-config: |
+      ${adapter-config}
+    constraints: |
+      ${constraints}
