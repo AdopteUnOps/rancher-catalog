@@ -5,7 +5,7 @@ artifactory:
   labels:
     io.rancher.sidekicks: artifactory-datavolume
     io.rancher.container.hostname_override: container_name
-jenkins-datavolume:
+artifactory-datavolume:
   image: "busybox"
   volumes:
     - /var/opt/jfrog/artifactory/data
