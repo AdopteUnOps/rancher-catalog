@@ -37,3 +37,15 @@ node {
    docker.build 'myimage'
 }
 ```
+See [jenkins pipeline documentation](https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/chapter-docker-workflow.html) to get more details.
+ 
+ # Advanced example
+ If you want to control docker version you can setup available versions and installation scripts in jenkins and then refer to it with tool keyword.
+ ```
+ node {
+    stage 'Prepare docker image'
+    sh 'echo "FROM debian:jessie" > Dockerfile'
+    stage 'Build docker image'
+    dockerHome = tool name: '1.10.3', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+    sh "${dockerHome}/bin/docker build ."
+ ```
