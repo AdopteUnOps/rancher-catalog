@@ -31,7 +31,7 @@
         description: |
           stack/service link or external service link to postgres.
         label: "Postgres stack/service"
-        default: "postgres/postgres-master"
+        default: "postgresql/postgresql-master"
         required: true
         type: "service"
 mattermost:
