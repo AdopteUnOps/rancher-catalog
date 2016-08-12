@@ -1,0 +1,5 @@
+name: mattermost
+description: |
+  Mattermost is an open source, self-hosted Slack-alternative.
+category: Chat
+version: 3.2.0
