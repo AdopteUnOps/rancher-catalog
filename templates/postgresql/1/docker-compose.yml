@@ -1,0 +1,50 @@
+postgresql-master:
+  environment:
+    DB_USER: ${DB_USER}
+    DB_PASS: ${DB_PASS}
+    DB_NAME: ${DB_NAME}
+    REPLICATION_USER: ${REPLICATION_USER}
+    REPLICATION_PASS: ${REPLICATION_PWD}
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.sidekicks: postgresql-master-datavolume
+  tty: true
+  image: sameersbn/postgresql:9.5
+  stdin_open: true
+  volumes_from:
+  - postgresql-master-datavolume
+postgresql-slave:
+  environment:
+    REPLICATION_MODE: slave
+    REPLICATION_SSLMODE: prefer
+    REPLICATION_PORT: 5432
+    REPLICATION_HOST: master
+    REPLICATION_USER: ${REPLICATION_USER}
+    REPLICATION_PASS: ${REPLICATION_PWD}
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:container_label_ne: io.rancher.stack_service.name=postgresql/postgresqlmaster
+    io.rancher.sidekicks: postgresql-slave-datavolume
+  tty: true
+  image: sameersbn/postgresql:9.5
+  stdin_open: true
+  links:
+  - postgresql-master:master
+  volumes_from:
+  - postgresql-slave-datavolume
+postgresql-master-datavolume:
+  labels:
+    io.rancher.container.hostname_override: container_name
+    io.rancher.container.start_once: true
+  volumes:
+  - /var/lib/postgresql
+  entrypoint: /bin/true
+  image: busybox
+postgresql-slave-datavolume:
+  labels:
+    io.rancher.container.hostname_override: container_name
+    io.rancher.container.start_once: true
+  volumes:
+  - /var/lib/postgresql
+  entrypoint: /bin/true
+  image: busybox

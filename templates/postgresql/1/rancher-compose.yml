@@ -1,0 +1,36 @@
+.catalog:
+  name: "Postgresql"
+  version: "9.5"
+  description: "Postgresql Master/Slave"
+  questions:
+    - variable: DB_USER
+      description: "Db User"
+      label: "Db User"
+      type: "string"
+      required: true
+    - variable: DB_PASS
+      description: "Db Password"
+      label: "Db Pass"
+      type: "password"
+      required: true
+    - variable: DB_NAME
+      description: "Db Name"
+      label: "Db Name"
+      type: "string"
+      required: true
+    - variable: REPLICATION_USER
+      description: "Replication user"
+      label: "Replication user"
+      type: "string"
+      required: true
+      default: "replicationAccount"
+    - variable: REPLICATION_PWD
+      description: "Replication password"
+      label: "Replication password"
+      type: "string"
+      required: true
+      default: "Oi4ElQ2Z/bc/k"
+postgresql-master:
+  scale: 1
+postgresql-slave:
+  scale: 1
