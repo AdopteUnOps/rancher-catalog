@@ -1,0 +1,38 @@
+.catalog:
+  name: "mattermost"
+  version: "3.3.0"
+  description: "Mattermost is an open source, self-hosted Slack-alternative."
+  questions:
+      - variable: "mattermost_db_login"
+        description: "Mattermost database login"
+        label: "Database login"
+        type: "string"
+        required: true
+        default: "mattermost"
+      - variable: "mattermost_db_password"
+        description: "Mattermost database password"
+        label: "Database password"
+        type: "password"
+        required: true
+        default: "mattermost_password"
+      - variable: "mattermost_db_name"
+        description: "Mattermost database name"
+        label: "Database name"
+        type: "string"
+        required: true
+        default: "mattermost"
+      - variable: "mattermost_port"
+        description: "Mattermost port"
+        label: "Mattermost port"
+        type: "string"
+        required: true
+        default: "80"
+      - variable: "postgres_link"
+        description: |
+          stack/service link or external service link to postgres.
+        label: "Postgres stack/service"
+        default: "postgresql/postgresql-master"
+        required: true
+        type: "service"
+mattermost:
+  scale: 1
