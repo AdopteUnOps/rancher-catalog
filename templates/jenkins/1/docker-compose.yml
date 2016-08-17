@@ -18,7 +18,7 @@ jenkins-tools:
 jenkins-config-scripts:
   image: adopteunops/rancher-jenkins-startup-scripts:latest
 jenkins-plugins:
-  image: rancher/jenkins-plugins:v0.1.1
+  image: adopteunops/jenkins-plugins:0.1.1-jenkins2
 jenkins-datavolume:
   image: "busybox"
   volumes:
