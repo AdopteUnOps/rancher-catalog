@@ -1,0 +1,5 @@
+name: Sonarqube
+description: |
+  SonarQube is an open source platform for continuous inspection of code quality.
+version: 5.6.1
+category: Continuous Integration
