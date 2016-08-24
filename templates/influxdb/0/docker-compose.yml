@@ -1,0 +1,18 @@
+influxdb:
+  ports:
+  - 8083:8083/tcp
+  - 8086:8086/tcp
+  labels:
+    io.rancher.sidekicks: influxdb-datavolume
+    io.rancher.container.pull_image: always
+  tty: true
+  image: influxdb:0.13
+  volumes_from:
+  - influxdb-datavolume
+influxdb-datavolume:
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  image: busybox
+  volumes:
+  - /var/lib/influxdb
