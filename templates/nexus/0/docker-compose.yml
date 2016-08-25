@@ -11,7 +11,7 @@ nexus:
     MAX_HEAP: 768m
 nexus-datavolume:
   image: "busybox"
-  command: chmod -R 200 /sonatype-work
+  command: chown -R 200 /sonatype-work
   volumes:
     - /sonatype-work
   labels:

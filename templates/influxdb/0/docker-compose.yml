@@ -11,5 +11,6 @@ influxdb:
   - influxdb-datavolume
 influxdb-datavolume:
   image: busybox
+  entrypoint: /bin/true
   volumes:
   - /var/lib/influxdb

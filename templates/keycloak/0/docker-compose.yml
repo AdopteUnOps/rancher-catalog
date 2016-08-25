@@ -14,9 +14,8 @@ keycloak-datavolume:
   labels:
     io.rancher.container.hostname_override: container_name
     io.rancher.container.start_once: true
-  command: chmod -R 1000 /opt/jboss/keycloak/standalone/data
+  command: chown -R 1000 /opt/jboss/keycloak/standalone/data
   volumes:
   - /opt/jboss/keycloak/standalone/data
-  entrypoint: /bin/true
   image: busybox
 
