@@ -6,7 +6,7 @@ keycloak:
     io.rancher.container.pull_image: always
     io.rancher.sidekicks: keycloak-datavolume
   tty: true
-  image: jboss/keycloak
+  image: jboss/keycloak:2.1.0.Final
   stdin_open: true
   volumes_from:
   - keycloak-datavolume
