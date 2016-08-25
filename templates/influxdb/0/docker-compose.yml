@@ -10,9 +10,6 @@ influxdb:
   volumes_from:
   - influxdb-datavolume
 influxdb-datavolume:
-  labels:
-    io.rancher.container.pull_image: always
-  tty: true
   image: busybox
   volumes:
   - /var/lib/influxdb
