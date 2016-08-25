@@ -1,6 +1,6 @@
 telegraf:
   external_links:
-  - ${influxdb_link}:influxdb'
+  - ${influxdb_link}:influxdb
   labels:
     io.rancher.sidekicks: telegraf-config
     io.rancher.container.pull_image: always
