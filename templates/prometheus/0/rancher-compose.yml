@@ -4,14 +4,51 @@
   description: "Prometheus Monitoring Solution"
   minimum_rancher_version: v0.59.0
   questions:
+  - variable: PROMETHEUS_CONFIG
+    description: "Prometheus config"
+    label: "Prometheus config"
+    type: "multiline"
+    required: true
+    default: |
+      global:
+        scrape_interval:     15s
+        evaluation_interval: 15s
+        external_labels:
+            monitor: 'exporter-metrics'
 
-ranch-eye:
-  upgrade_strategy:
-    start_first: true
+      scrape_configs:
+      - job_name: 'HostsMetrics'
+        dns_sd_configs:
+        - names:
+          - node-exporter
+          refresh_interval: 15s
+          type: A
+          port: 9100
 
-node-exporter:
-  upgrade_strategy:
-    start_first: true
+      - job_name: 'ContainerMetrics'
+        dns_sd_configs:
+        - names:
+          - ranch-eye
+          refresh_interval: 15s
+          type: A
+          port: 9104
+
+      - job_name: 'rancher-api'
+        static_configs:
+          - targets:
+            - 'prometheus-rancher-exporter:9010'
+
+      - job_name: 'Prometheus'
+        static_configs:
+          - targets:
+            - '127.0.0.1:9090'
+      ranch-eye:
+        upgrade_strategy:
+          start_first: true
+
+      node-exporter:
+        upgrade_strategy:
+          start_first: true
 
 prometheus:
   scale: 1
@@ -22,6 +59,11 @@ prometheus:
     request_line: ''
     healthy_threshold: 2
     response_timeout: 5000
+
+prometheus-config:
+  metadata:
+    prometheus-config: |
+      "${PROMETHEUS_CONFIG}"
 
 alertmanager:
   scale: 1
