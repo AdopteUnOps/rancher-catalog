@@ -52,6 +52,9 @@
 
 prometheus:
   scale: 1
+  metadata:
+    prometheus-config: |
+      "${PROMETHEUS_CONFIG}"
   health_check:
     port: 9090
     interval: 5000
@@ -59,11 +62,6 @@ prometheus:
     request_line: ''
     healthy_threshold: 2
     response_timeout: 5000
-
-prometheus-config:
-  metadata:
-    prometheus-config: |
-      "${PROMETHEUS_CONFIG}"
 
 alertmanager:
   scale: 1
