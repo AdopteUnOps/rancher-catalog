@@ -34,11 +34,18 @@ prometheus:
     - node-exporter:node-exporter
     - prometheus-rancher-exporter:prometheus-rancher-exporter
 
-alert-manager:
+alertmanager-config:
+  image: adopteunops/rancher-prometheus-alertmanager-config:latest
+
+alertmanager:
   ports:
   - 9093:9093/tcp
   tty: true
   image: prom/alertmanager:v0.4.0
+  labels:
+    io.rancher.sidekicks: alertmanager-config
+  volumes_from:
+    - alertmanager-config
   links:
   - 'prometheus:'
 
