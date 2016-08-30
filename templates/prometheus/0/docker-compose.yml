@@ -35,7 +35,7 @@ prometheus:
     - prometheus-rancher-exporter:prometheus-rancher-exporter
 
 influxdb:
-  image: tutum/influxdb:0.10
+  image: tutum/influxdb:0.13
   ports:
     - 8083:8083
     - 8086:8086
