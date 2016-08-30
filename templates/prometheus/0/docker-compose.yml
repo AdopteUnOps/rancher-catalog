@@ -34,6 +34,14 @@ prometheus:
     - node-exporter:node-exporter
     - prometheus-rancher-exporter:prometheus-rancher-exporter
 
+alert-manager:
+  ports:
+  - 9093:9093/tcp
+  tty: true
+  image: prom/alertmanager:v0.4.0
+  links:
+  - 'prometheus:'
+
 influxdb:
   image: tutum/influxdb:0.13
   ports:

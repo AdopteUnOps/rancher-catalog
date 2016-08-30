@@ -23,6 +23,9 @@ prometheus:
     healthy_threshold: 2
     response_timeout: 5000
 
+alert-manager:
+  scale: 1
+
 influxdb:
   scale: 1
   health_check:
