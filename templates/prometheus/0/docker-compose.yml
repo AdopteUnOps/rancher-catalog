@@ -17,7 +17,7 @@ node-exporter:
   stdin_open: true
 
 prometheus-config:
-  image: adopteunops/rancher-prometheus-conf:latest
+  image: adopteunops/rancher-prometheus-config:latest
 
 prometheus:
   tty: true
@@ -28,7 +28,7 @@ prometheus:
   labels:
     io.rancher.sidekicks: prometheus-config
   volumes_from:
-     - prom-conf
+     - prometheus-config
   links:
     - ranch-eye:ranch-eye
     - node-exporter:node-exporter
