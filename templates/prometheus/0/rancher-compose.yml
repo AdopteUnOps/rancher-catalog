@@ -16,6 +16,9 @@
         external_labels:
             monitor: 'exporter-metrics'
 
+      rule_files:
+      - /etc/prom-conf/rules.yml
+
       scrape_configs:
       - job_name: 'HostsMetrics'
         dns_sd_configs:
