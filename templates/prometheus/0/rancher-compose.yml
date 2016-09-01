@@ -45,6 +45,19 @@
         static_configs:
           - targets:
             - '127.0.0.1:9090'
+  - variable: PROMETHEUS_RULES
+      description: "Prometheus rules"
+      label: "Prometheus rules"
+      type: "multiline"
+      required: true
+      default: |
+        IF rancher_services == 0
+          FOR 5m
+          LABELS { severity = "page" }
+          ANNOTATIONS {
+            summary = "Instance {{ $labels.name }} down",
+            description = "{{ $labels.name }} of job {{ $labels.job }} has been down for more than 5 minutes.",
+          }
   - variable: ALERTMANAGER_CONFIG
     description: "Alert Manager config"
     label: "Alert Manager config"
@@ -72,6 +85,8 @@ prometheus:
   metadata:
     prometheus-config: |
       ${PROMETHEUS_CONFIG}
+    prometheus-rules: |
+      ${PROMETHEUS_RULES}
   health_check:
     port: 9090
     interval: 5000
