@@ -51,7 +51,8 @@
     type: "multiline"
     required: true
     default: |
-      IF rancher_services == 0
+      ALERT InstanceDown
+        IF rancher_services == 0
         FOR 5m
         LABELS { severity = "page" }
         ANNOTATIONS {
