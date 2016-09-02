@@ -1,6 +1,6 @@
 .catalog:
   name: "Keycloak"
-  version: "2.1.0.Final"
+  version: "2.1.0"
   description: "Keycloak"
   questions:
     - variable: KEYCLOAK_USER
