@@ -1,0 +1,9 @@
+alerta:
+  image: alerta/alerta-web:latest
+  ports:
+    - 80:80/tcp
+  labels:
+    io.rancher.container.hostname_override: container_name
+    io.rancher.container.pull_image: always
+  external_links:
+    - ${mongo_link}:mongo
