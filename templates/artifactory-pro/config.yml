@@ -1,0 +1,5 @@
+name: Artifactory Pro
+description: |
+  A repository manager.
+version: 4.11.0
+category: Continuous Integration
