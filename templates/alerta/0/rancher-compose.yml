@@ -7,7 +7,7 @@
     - variable: "mongo_link"
       description: stack/service link or external service link to mongo.
       label: "Mongo stack/service"
-      default: "mongodb/mongo-cluster"
+      default: "MongoDB/mongo-cluster"
       required: true
       type: "service"
 alerta:
