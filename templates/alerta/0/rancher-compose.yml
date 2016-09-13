@@ -4,9 +4,8 @@
   description: |
     Alert manager.
   questions:
-  - variable: "mongo_link"
-        description: |
-          stack/service link or external service link to mongo.
+    - variable: "mongo_link"
+        description: stack/service link or external service link to mongo.
         label: "Mongo stack/service"
         default: "mongodb/mongo-cluster"
         required: true
