@@ -10,5 +10,11 @@
       default: "MongoDB/mongo-cluster"
       required: true
       type: "service"
+    - variable: replset_name
+      description: "Name of the MongoDB replicaSet"
+      label: "ReplicaSet Name"
+      type: "string"
+      required: true
+      default: "rs0"
 alerta:
   scale: 1

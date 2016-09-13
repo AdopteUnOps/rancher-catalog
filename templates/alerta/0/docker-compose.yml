@@ -5,5 +5,7 @@ alerta:
   labels:
     io.rancher.container.hostname_override: container_name
     io.rancher.container.pull_image: always
+  environment:
+    MONGO_REPLSET: ${replset_name}
   external_links:
     - ${mongo_link}:mongo
