@@ -16,3 +16,37 @@ artifactory-datavolume:
     - /var/opt/jfrog/artifactory/etc
   labels:
     io.rancher.container.start_once: true
+
+selfsigned-generator:
+  environment:
+    COMMON_NAME: "${ARTIFACTORY_PUBLIC_DNS}"
+    SUBJ_ALT_NAME: "DNS:*.${ARTIFACTORY_PUBLIC_DNS}"
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
+  tty: true
+  image: adopteunops/selfsigned-generator
+  links:
+  - 'artifactory:'
+  volumes:
+  - /certs
+artifactory-proxy-config:
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  image: adopteunops/artifactory-nginx-config
+  links:
+  - 'artifactory:'
+artifactory-proxy:
+  ports:
+  - 443:443/tcp
+  labels:
+    io.rancher.sidekicks: artifactory-proxy-config,selfsigned-generator
+    io.rancher.container.pull_image: always
+  tty: true
+  image: nginx
+  links:
+  - 'artifactory:'
+  volumes_from:
+  - artifactory-proxy-config
+  - selfsigned-generator
