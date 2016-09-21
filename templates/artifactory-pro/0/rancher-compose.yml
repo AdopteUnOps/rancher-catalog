@@ -14,6 +14,12 @@
     label: "Artifactory Public Port"
     type: "int"
     required: true
+    default: 8081
+  - variable: ARTIFACTORY_PUBLIC_SSL_PORT
+    description: "Artifactory Public SSL Port"
+    label: "Artifactory Public SSL Port"
+    type: "int"
+    required: true
     default: 443
 artifactory:
   scale: 1
@@ -22,3 +28,4 @@ artifactory-proxy:
   metadata:
     public-dns: ${ARTIFACTORY_PUBLIC_DNS}
     public-port: ${ARTIFACTORY_PUBLIC_PORT}
+    public-port: ${ARTIFACTORY_PUBLIC_SSL_PORT}

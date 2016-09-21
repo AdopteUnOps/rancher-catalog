@@ -1,7 +1,5 @@
 artifactory:
   image: docker.bintray.io/jfrog/artifactory-pro:4.11.0
-  ports:
-    - 8081:8081/tcp
   volumes_from:
     - artifactory-datavolume
   labels:
@@ -39,7 +37,8 @@ artifactory-proxy-config:
   - 'artifactory:'
 artifactory-proxy:
   ports:
-  - 443:443/tcp
+  - ${ARTIFACTORY_PUBLIC_PORT}:${ARTIFACTORY_PUBLIC_PORT}/tcp
+  - ${ARTIFACTORY_PUBLIC_SSL_PORT}:${ARTIFACTORY_PUBLIC_SSL_PORT}/tcp
   labels:
     io.rancher.sidekicks: artifactory-proxy-config,selfsigned-generator
     io.rancher.container.pull_image: always
