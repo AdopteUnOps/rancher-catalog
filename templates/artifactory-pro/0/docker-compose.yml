@@ -41,9 +41,8 @@ artifactory-proxy:
   - ${ARTIFACTORY_PUBLIC_SSL_PORT}:${ARTIFACTORY_PUBLIC_SSL_PORT}/tcp
   labels:
     io.rancher.sidekicks: artifactory-proxy-config,selfsigned-generator
-    io.rancher.container.pull_image: always
   tty: true
-  image: nginx
+  image: nginx:1.11
   links:
   - 'artifactory:'
   volumes_from:
