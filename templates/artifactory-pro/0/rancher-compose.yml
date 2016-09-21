@@ -28,4 +28,4 @@ artifactory-proxy:
   metadata:
     public-dns: ${ARTIFACTORY_PUBLIC_DNS}
     public-port: ${ARTIFACTORY_PUBLIC_PORT}
-    public-port: ${ARTIFACTORY_PUBLIC_SSL_PORT}
+    public-ssl-port: ${ARTIFACTORY_PUBLIC_SSL_PORT}
