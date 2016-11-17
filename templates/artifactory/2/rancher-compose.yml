@@ -1,0 +1,7 @@
+.catalog:
+  name: Artifactory
+  version: 4.14.1
+  description: |
+    A repository manager.
+artifactory:
+  scale: 1

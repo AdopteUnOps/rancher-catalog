@@ -1,0 +1,18 @@
+artifactory:
+  image: docker.bintray.io/jfrog/artifactory-oss:4.14.1
+  ports:
+    - 8081:8081/tcp
+  volumes_from:
+    - artifactory-datavolume
+  labels:
+    io.rancher.sidekicks: artifactory-datavolume
+    io.rancher.container.hostname_override: container_name
+artifactory-datavolume:
+  image: "busybox"
+  volumes:
+    - /var/opt/jfrog/artifactory/data
+    - /var/opt/jfrog/artifactory/logs
+    - /var/opt/jfrog/artifactory/backup
+    - /var/opt/jfrog/artifactory/etc
+  labels:
+    io.rancher.container.start_once: true
