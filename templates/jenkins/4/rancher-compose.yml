@@ -1,0 +1,84 @@
+.catalog:
+  name: Jenkins
+  version: 2.19.3-with-docker
+  description: |
+    Jenkins CI management server.
+  questions:
+    - variable: "jenkinsprojectaccount"
+      type: "string"
+      label: "Project username"
+    - variable: "jenkinsprojectpassword"
+      type: "password"
+      label: "Project password"
+    - variable: "plugins"
+      type: "multiline"
+      label: "List of Plugins"
+      description: |
+        List of plugins in the format <plugin_name>[:<version>]
+        one entry per line.
+      default: |
+        ldap:latest
+        git-server:latest
+        git:latest
+        github-api:latest
+        ssh-slaves:latest
+        credentials-binding:latest
+        workflow-api:latest
+        workflow-support:latest
+        git-client:latest
+        script-security:latest
+        greenballs:latest
+        workflow-job:latest
+        matrix-auth:latest
+        ace-editor:latest
+        javadoc:latest
+        credentials:latest
+        ant:latest
+        workflow-durable-task-step:latest
+        plain-credentials:latest
+        mapdb-api:latest
+        durable-task:latest
+        translation:latest
+        branch-api:latest
+        workflow-scm-step:latest
+        structs:latest
+        swarm:latest
+        icon-shim:latest
+        matrix-project:latest
+        handlebars:latest
+        maven-plugin:latest
+        pipeline-stage-step:latest
+        jquery-detached:latest
+        ssh-credentials:latest
+        workflow-basic-steps:latest
+        external-monitor-job:latest
+        subversion:latest
+        pam-auth:latest
+        junit:latest
+        scm-api:latest
+        mailer:latest
+        antisamy-markup-formatter:latest
+        workflow-cps-global-lib:latest
+        windows-slaves:latest
+        cloudbees-folder:latest
+        pipeline-stage-view:latest
+        workflow-aggregator:latest
+        workflow-cps:latest
+        cvs:latest
+        pipeline-build-step:latest
+        github-oauth:latest
+        workflow-step-api:latest
+        pipeline-input-step:latest
+        workflow-multibranch:latest
+        pipeline-rest-api:latest
+        momentjs:latest
+        authentication-tokens:latest
+        docker-commons:latest
+        token-macro:latest
+        docker-workflow:latest
+jenkins-primary:
+  metadata:
+    jenkinsprojectaccount: ${jenkinsprojectaccount}
+    jenkinsprojectpassword: ${jenkinsprojectpassword}
+    plugins: |
+      ${plugins}
