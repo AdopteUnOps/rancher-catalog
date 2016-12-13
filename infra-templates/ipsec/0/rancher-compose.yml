@@ -1,0 +1,37 @@
+.catalog:
+  name: "Rancher IPsec"
+  version: "0.0.1"
+  questions:
+    - variable: "SUBNET"
+      description: "Project subnet"
+      label: "Project subnet"
+      required: true
+      type: "string"
+      default: '10.42.0.0/16'
+ipsec:
+  network_driver:
+    name: Rancher IPsec
+    default_network:
+      name: ipsec
+      host_ports: true
+      subnets:
+      - network_address: ${SUBNET}
+      dns:
+      - 169.254.169.250
+      dns_search:
+      - rancher.internal
+    cni_config:
+      '10-rancher.conf':
+        name: rancher-cni-network
+        type: rancher-bridge
+        bridge: docker0
+        bridgeSubnet: ${SUBNET}
+        isDefaultGateway: true
+        hostNat: true
+        hairpinMode: true
+        linkMTUOverhead: 98
+        ipam:
+          type: rancher-cni-ipam
+          logToFile: /var/log/rancher-ipam.log
+          routes:
+          - dst: 169.254.169.250/32
