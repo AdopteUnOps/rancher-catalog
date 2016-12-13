@@ -1,0 +1,13 @@
+name: Custom-Cattle
+description: "Custom Cattle template"
+stacks:
+- name: healthcheck
+  template_id: library:infra*healthcheck
+- name: network-services
+  template_id: library:infra*network-services
+- answers:
+    SUBNET: 10.42.0.0/16
+  name: ipsec
+  template_id: adopteunops:infra*ipsec
+- name: scheduler
+  template_id: library:infra*scheduler
