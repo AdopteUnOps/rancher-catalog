@@ -1,0 +1,29 @@
+mattermost-datavolume:
+  labels:
+    io.rancher.container.start_once: 'true'
+  tty: true
+  image: busybox
+  volumes:
+  - /mattermost/config
+  - /mattermost/data
+  stdin_open: true
+mattermost:
+  environment:
+    MM_USERNAME: ${mattermost_db_login}
+    MM_PASSWORD: ${mattermost_db_password}
+    MM_DBNAME: ${mattermost_db_name}
+    DB_HOST: postgres
+  external_links:
+  - ${postgres_link}:postgres
+  ports:
+    - ${mattermost_port}:80
+  labels:
+    io.rancher.sidekicks: mattermost-datavolume
+    io.rancher.container.pull_image: always
+  tty: true
+  image: mattermost/mattermost-prod-app:3.5.1
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+  volumes_from:
+  - mattermost-datavolume
+  stdin_open: true
