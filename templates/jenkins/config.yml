@@ -1,5 +1,5 @@
 name: Jenkins
 description: |
   Jenkins CI server (LTS)
-version: 2.19.3-with-docker
+version: 2.32.1-with-docker
 category: Continuous Integration
