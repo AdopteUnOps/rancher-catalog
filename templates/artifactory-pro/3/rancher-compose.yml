@@ -1,0 +1,31 @@
+.catalog:
+  name: Artifactory Pro
+  version: 4.15.0
+  description: |
+    A repository manager.
+  questions:
+  - variable: ARTIFACTORY_PUBLIC_DNS
+    description: "Artifactory Public DNS"
+    label: "Artifactory Public DNS"
+    type: "string"
+    required: true
+  - variable: ARTIFACTORY_PUBLIC_PORT
+    description: "Artifactory Public Port"
+    label: "Artifactory Public Port"
+    type: "int"
+    required: true
+    default: 8081
+  - variable: ARTIFACTORY_PUBLIC_SSL_PORT
+    description: "Artifactory Public SSL Port"
+    label: "Artifactory Public SSL Port"
+    type: "int"
+    required: true
+    default: 443
+artifactory:
+  scale: 1
+artifactory-proxy:
+  scale: 1
+  metadata:
+    public-dns: ${ARTIFACTORY_PUBLIC_DNS}
+    public-port: ${ARTIFACTORY_PUBLIC_PORT}
+    public-ssl-port: ${ARTIFACTORY_PUBLIC_SSL_PORT}
