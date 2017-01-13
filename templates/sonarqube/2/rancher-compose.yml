@@ -1,0 +1,33 @@
+.catalog:
+  name: Sonarqube
+  version: 6.2
+  description: |
+    SonarQube is an open source platform for continuous inspection of code quality.
+  questions:
+  - variable: "sonarqube_db_login"
+    description: "Sonarqube database login"
+    label: "Database login"
+    type: "string"
+    required: true
+    default: "sonarqube"
+  - variable: "sonarqube_db_password"
+    description: "Sonarqube database password"
+    label: "Database password"
+    type: "password"
+    required: true
+    default: "sonarqube_password"
+  - variable: "sonarqube_port"
+    description: "Sonarqube port"
+    label: "Sonarqube port"
+    type: "string"
+    required: true
+    default: "80"
+  - variable: "postgres_link"
+    description: |
+      stack/service link or external service link to postgres.
+    label: "Postgres stack/service"
+    default: "postgresql/postgresql-master"
+    required: true
+    type: "service"
+sonarqube:
+  scale: 1
