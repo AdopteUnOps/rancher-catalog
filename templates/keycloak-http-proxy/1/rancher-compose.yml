@@ -1,0 +1,36 @@
+.catalog:
+  name: "keycloak-http-proxy"
+  version: "2.5.0"
+  description: "Provide a keycloak http proxy stack"
+  uuid: keycloak-http-proxy-1
+  questions:
+    - variable: "targeturl"
+      label: "Target url"
+      description: "The URL this server is proxying"
+      type: "string"
+      required: true
+    - variable: "adapter_config"
+      label: "Adapter config"
+      description: "Your application adapter (export it from Installation tab in your client application on keycloak)"
+      type: "multiline"
+      required: true
+    - variable: "constraints"
+      label: "Application constraints"
+      description: "Next under each application you can define one or more constraints in the constraints array attribute. A constraint defines a URL pattern relative to the base-path. You can deny, permit, or require authentication for a specific URL pattern. You can specify roles allowed for that path as well. More specific constraints will take precedence over more general ones."
+      type: "multiline"
+      required: true
+      default: |
+        [
+          {
+              "pattern": "/*",
+              "authenticate": "true"
+          }
+        ]
+keycloak-proxy:
+  scale: 1
+  metadata:
+    targeturl: ${targeturl}
+    adapter-config: |
+      ${adapter_config}
+    constraints: |
+      ${constraints}

@@ -1,0 +1,10 @@
+keycloak-proxy:
+  image: adopteunops/keycloak-http-proxy:2.5.0
+  labels:
+    io.rancher.sidekicks: keycloak-proxy-config
+  tty: true
+  stdin_open: true
+  volumes_from:
+  - keycloak-proxy-config
+keycloak-proxy-config:
+  image: adopteunops/keycloak-http-proxy-config:1.0.0
