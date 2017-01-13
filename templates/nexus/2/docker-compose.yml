@@ -1,0 +1,18 @@
+nexus:
+  image: sonatype/nexus:2.14.2-01
+  ports:
+    - 8081:8081/tcp
+  volumes_from:
+    - nexus-datavolume
+  labels:
+    io.rancher.sidekicks: nexus-datavolume
+    io.rancher.container.hostname_override: container_name
+  environment:
+    MAX_HEAP: 768m
+nexus-datavolume:
+  image: "busybox"
+  command: chown -R 200 /sonatype-work
+  volumes:
+    - /sonatype-work
+  labels:
+    io.rancher.container.start_once: true
