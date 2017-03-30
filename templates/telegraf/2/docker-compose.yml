@@ -1,0 +1,15 @@
+telegraf:
+  external_links:
+  - ${influxdb_link}:influxdb
+  labels:
+    io.rancher.sidekicks: telegraf-config
+    io.rancher.container.pull_image: always
+  tty: true
+  command:
+  - -config
+  - /config/telegraf.toml
+  image: telegraf:1.2.1
+  volumes_from:
+  - telegraf-config
+telegraf-config:
+  image: objectpartners/rancher-telegraf-config:latest
