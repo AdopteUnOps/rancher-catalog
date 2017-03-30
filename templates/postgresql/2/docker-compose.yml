@@ -9,7 +9,7 @@ postgresql-master:
     io.rancher.container.pull_image: always
     io.rancher.sidekicks: postgresql-master-datavolume
   tty: true
-  image: sameersbn/postgresql:9.5
+  image: sameersbn/postgresql:9.6
   stdin_open: true
   volumes_from:
   - postgresql-master-datavolume
