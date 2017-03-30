@@ -1,0 +1,20 @@
+keycloak:
+  environment:
+    KEYCLOAK_USER: ${KEYCLOAK_USER}
+    KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.sidekicks: keycloak-datavolume
+  tty: true
+  image: jboss/keycloak:3.0.0.Final
+  stdin_open: true
+  volumes_from:
+  - keycloak-datavolume
+keycloak-datavolume:
+  labels:
+    io.rancher.container.hostname_override: container_name
+    io.rancher.container.start_once: true
+  command: chown -R 1000 /opt/jboss/keycloak/standalone/data
+  volumes:
+  - /opt/jboss/keycloak/standalone/data
+  image: busybox

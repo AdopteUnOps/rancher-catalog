@@ -1,0 +1,17 @@
+.catalog:
+  name: "Keycloak"
+  version: "3.0.0"
+  description: "Keycloak"
+  questions:
+    - variable: KEYCLOAK_USER
+      description: "User admin"
+      label: "User admin"
+      type: "string"
+      required: true
+    - variable: KEYCLOAK_PASSWORD
+      description: "Password admin"
+      label: "Password admin"
+      type: "password"
+      required: true
+keycloak:
+  scale: 1
