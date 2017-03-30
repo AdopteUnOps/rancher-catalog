@@ -1,5 +1,5 @@
 name: Artifactory
 description: |
   A repository manager.
-version: 4.15.0
+version: 5.2.0
 category: Continuous Integration
