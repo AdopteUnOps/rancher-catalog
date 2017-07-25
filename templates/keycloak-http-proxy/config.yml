@@ -1,5 +1,5 @@
 name: keycloak-http-proxy
 description: |
   Provide a keycloak-http-proxy
-version: 2.5.0
+version: 3.2.1
 category: auth
