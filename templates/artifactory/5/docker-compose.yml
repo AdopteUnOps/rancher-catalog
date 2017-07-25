@@ -1,5 +1,5 @@
 artifactory:
-  image: docker.bintray.io/jfrog/artifactory-oss:5.4.5
+  image: docker.bintray.io/jfrog/artifactory-oss:5.2.0
   ports:
     - 8081:8081/tcp
   volumes_from:
