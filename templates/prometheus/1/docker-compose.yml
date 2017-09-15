@@ -1,0 +1,122 @@
+version: '2'
+services:
+  prometheus-rancher-scraper:
+    image: adopteunops/prom-rancher-sd:1.0.0
+  prometheus-rancher-exporter:
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.container.create_agent: 'true'
+      io.rancher.container.agent.role: environment
+      io.rancher.container.pull_image: always
+    tty: true
+    environment:
+      HIDE_SYS: 'false'
+    image: infinityworks/prometheus-rancher-exporter:v0.22.52
+
+  prometheus-config:
+    image: adopteunops/rancher-prometheus-config:latest
+    links:
+    - cadvisor:cadvisor
+    - prometheus-rancher-exporter:prometheus-rancher-exporter
+    - node-exporter:node-exporter
+  prometheus:
+    ports:
+      - 9090:9090
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.sidekicks: prometheus-config,prometheus-rancher-scraper
+      io.rancher.scheduler.affinity:host_label: role=monitoring
+      io.rancher.scheduler.affinity:container_label_ne: io.rancher.stack_service.name=$${stack_name}/$${service_name}
+    command:
+    - -alertmanager.url=http://alertmanager:9093
+    - -config.file=/etc/prom-conf/prometheus.yml
+    - -storage.local.path=/prometheus
+    - -web.console.libraries=/etc/prometheus/console_libraries
+    - -web.console.templates=/etc/prometheus/consoles
+    tty: true
+    image: prom/prometheus:v1.7.1
+    links:
+    - cadvisor:cadvisor
+    - prometheus-rancher-exporter:prometheus-rancher-exporter
+    - node-exporter:node-exporter
+    volumes:
+    - prometheus-volume:/prometheus
+    volumes_from:
+    - prometheus-config
+    - prometheus-rancher-scraper
+
+  grafana:
+    ports:
+      - 3000:3000
+    labels:
+      io.rancher.sidekicks: graf-db
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: role=monitoring
+    tty: true
+    image: grafana/grafana:4.5.1
+    links:
+    - prometheus:prometheus
+  graf-db:
+    tty: true
+    image: infinityworks/graf-db:08
+    command: cat
+    volumes:
+      - /var/lib/grafana/
+
+  alertmanager-config:
+    image: adopteunops/rancher-prometheus-alertmanager-config:latest
+    links:
+    - prometheus:prometheus
+  alertmanager:
+    ports:
+    - 9093:9093/tcp
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.sidekicks: alertmanager-config
+      io.rancher.scheduler.affinity:host_label: role=monitoring
+    tty: true
+    image: prom/alertmanager:v0.8.0
+    links:
+    - prometheus:prometheus
+    volumes_from:
+    - alertmanager-config
+    command:
+    - -config.file=/etc/alertmanager/config.yml
+    - -storage.path=/alertmanager
+
+  node-exporter:
+    labels:
+       io.rancher.container.hostname_override: container_name
+       io.rancher.scheduler.global: 'true'
+    tty: true
+    volumes:
+    - /proc:/host/proc
+    - /sys:/host/sys
+    - /:/rootfs
+    command:
+    - -collector.procfs
+    - /host/proc
+    - -collector.sysfs
+    - /host/sys
+    - -collector.filesystem.ignored-fs-types
+    - ^(aufs|proc|nsfs|shm|cgroup|tmpfs)
+    image: prom/node-exporter:v0.14.0
+    stdin_open: true
+
+  cadvisor:
+    labels:
+      io.rancher.scheduler.global: 'true'
+      com.prometheus.monitoring: true
+      com.prometheus.port: 8080
+    tty: true
+    image: google/cadvisor:v0.27.1
+    stdin_open: true
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+
+volumes:
+  prometheus-volume:
+    per_container: true

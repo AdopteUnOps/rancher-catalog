@@ -1,0 +1,211 @@
+# notemplating
+
+version: '2'
+catalog:
+  name: "Prometheus"
+  version: "1.0.3"
+  description: "Prometheus Monitoring Solution"
+  questions:
+  - variable: "prometheus_scale"
+    type: "int"
+    required: true
+    label: "# of prometheus nodes"
+    description: "Sets initial number of prometheus instances"
+    default: 1
+services:
+  prometheus-rancher-exporter:
+    health_check:
+      port: 9173
+      interval: 5000
+      unhealthy_threshold: 3
+      request_line: ''
+      healthy_threshold: 2
+      response_timeout: 5000
+  prometheus:
+    scale: ${prometheus_scale}
+    health_check:
+      port: 9090
+      interval: 5000
+      unhealthy_threshold: 3
+      request_line: ''
+      healthy_threshold: 2
+      response_timeout: 5000
+    metadata:
+      prometheus-config: |
+        global:
+          scrape_interval:     5s
+          evaluation_interval: 5s
+          external_labels:
+              monitor: 'exporter-metrics'
+              environment: 'Development'
+
+        rule_files:
+        - /etc/prom-conf/rules.yml
+
+        scrape_configs:
+        - job_name: 'Metrics'
+          file_sd_configs:
+          - files:
+            - /prom-rancher-sd-data/node_exporter.json
+            - /prom-rancher-sd-data/rancher.json
+            refresh_interval: 15s
+
+        - job_name: 'rancher-api'
+          dns_sd_configs:
+          - names:
+            - 'prometheus-rancher-exporter'
+            refresh_interval: 15s
+            type: A
+            port: 9173
+
+        - job_name: 'Prometheus'
+          static_configs:
+            - targets:
+              - '127.0.0.1:9090'
+
+      prometheus-rules: |
+        ALERT HostDown
+          IF rancher_host_agent_state{state != 'active'} == 1
+          FOR 5m
+          LABELS { severity = "critical" }
+          ANNOTATIONS {
+            summary = "Host {{ $$labels.name }} down",
+            description = "{{ $$labels.name }} has been {{ $$labels.state }} for more than 5 minutes."
+          }
+
+        ALERT StackUnHealthy
+          IF rancher_stack_health_status{health_state='unhealthy'} == 1
+          FOR 10m
+          LABELS {
+            severity = "critical",
+            service = "{{ $$labels.name }}"
+          }
+          ANNOTATIONS {
+            summary = "Stack {{ $$labels.name }} is unhealthy",
+            description = "{{ $$labels.name }} has been unhealthy for more than 10 minutes."
+          }
+
+        ALERT DiskWillFillInOneDay
+          IF predict_linear(node_filesystem_free{mountpoint='/rootfs'}[1h], 24*3600) < 0
+          FOR 1h
+          LABELS {
+            severity="major"
+          }
+          ANNOTATIONS {
+            summary = "Instance {{ $$labels.name }} disk warning",
+            description = "{{ $$labels.name }} : {{ $$labels.mountpoint }} will be filled within 1 day."
+          }
+
+        ALERT DiskWillFillIn4Hours
+          IF predict_linear(node_filesystem_free{mountpoint='/rootfs'}[1h], 4*3600) < 0
+          FOR 5m
+          LABELS {
+            severity="critical"
+          }
+          ANNOTATIONS {
+            summary = "Instance {{ $$labels.name }} disk alert",
+            description = "{{ $$labels.name }} : {{ $$labels.mountpoint }} will be filled within 4 hours."
+          }
+
+        ALERT RootDiskUsedAt85Percent
+          IF (node_filesystem_size{mountpoint='/rootfs'} - node_filesystem_avail{mountpoint='/rootfs'}) / node_filesystem_size{mountpoint='/rootfs'} * 100 > 85
+          FOR 5m
+          LABELS {
+            severity="critical"
+          }
+          ANNOTATIONS {
+            summary = "Instance {{ $$labels.name }} disk alert : root disk > 85%",
+            description = "Disk used on {{ $$labels.name }} root partition is {{ $$value }}%"
+          }
+
+        ALERT MaxFileDescriptor
+          IF node_filefd_allocated > 45000
+          FOR 10m
+          LABELS {
+            severity="major"
+          }
+          ANNOTATIONS {
+            summary = "High file descriptor usage",
+            description = "File descriptor open are really high on {{ $$labels.instance }}."
+          }
+
+        ALERT ScrapingTargetState
+          IF up == 0
+          FOR 10m
+          LABELS {
+            severity="minor"
+          }
+          ANNOTATIONS {
+            summary = "Unable to contact scraping target",
+            description = "Unable to contact scraping target on {{ $$labels.instance }} from job {{ $$labels.job }}."
+          }
+
+
+  grafana:
+    health_check:
+      port: 3000
+      interval: 5000
+      unhealthy_threshold: 3
+      request_line: ''
+      healthy_threshold: 2
+      response_timeout: 5000
+
+  alertmanager:
+    metadata:
+      alertmanager-config: |
+        global:
+          # The smarthost and SMTP sender used for mail notifications.
+          smtp_smarthost: 'localhost:25'
+          smtp_from: 'alertmanager@example.org'
+          smtp_auth_username: 'alertmanager'
+          smtp_auth_password: 'password'
+          # The auth token for Hipchat.
+          hipchat_auth_token: '1234556789'
+          # Alternative host for Hipchat.
+          hipchat_url: 'https://hipchat.foobar.org/'
+
+        # The root route on which each incoming alert enters.
+        route:
+          # The root route must not have any matchers as it is the entry point for
+          # all alerts. It needs to have a receiver configured so alerts that do not
+          # match any of the sub-routes are sent to someone.
+          receiver: 'team-mails'
+
+          # The labels by which incoming alerts are grouped together. For example,
+          # multiple alerts coming in for cluster=A and alertname=LatencyHigh would
+          # be batched into a single group.
+          group_by: ['alertname']
+
+          # When a new group of alerts is created by an incoming alert, wait at
+          # least 'group_wait' to send the initial notification.
+          # This way ensures that you get multiple alerts for the same group that start
+          # firing shortly after another are batched together on the first
+          # notification.
+          group_wait: 30s
+
+          # When the first notification was sent, wait 'group_interval' to send a batch
+          # of new alerts that started firing for that group.
+          group_interval: 5m
+
+          # If an alert has successfully been sent, wait 'repeat_interval' to
+          # resend them.
+          repeat_interval: 3h
+
+        # Inhibition rules allow to mute a set of alerts given that another alert is
+        # firing.
+        # We use this to mute any warning-level notifications if the same alert is
+        # already critical.
+        inhibit_rules:
+        - source_match:
+            severity: 'critical'
+          target_match:
+            severity: 'warning'
+          # Apply inhibition if the alertname is the same.
+          equal: ['alertname']
+
+
+        receivers:
+        - name: 'team-mails'
+          email_configs:
+          - to: 'someone@yourcompany.com'
+            send_resolved: true
