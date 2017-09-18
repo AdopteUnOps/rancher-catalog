@@ -87,9 +87,9 @@ catalog:
             - rancher-efs
             - rancher-ebs
 
-        - variable: "index_templates"
-          description: "Elasticsearch index templates"
-          label: "Index templates"
+        - variable: "index_template"
+          description: "Elasticsearch index template (limited to 1)"
+          label: "Index template"
           type: multiline
 
 services:
@@ -135,5 +135,6 @@ services:
 
   elasticsearch-setup:
     metadata:
-      template: |
-        ${index_templates}
+      template:
+        default-template: |
+          ${index_template}
