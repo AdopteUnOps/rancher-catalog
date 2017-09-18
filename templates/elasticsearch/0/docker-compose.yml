@@ -1,0 +1,159 @@
+version: '2'
+services:
+    elasticsearch-master-config:
+        labels:
+            io.rancher.container.start_once: true
+        network_mode: none
+        image: adopteunops/elasticsearch-rancher-config:latest
+    elasticsearch-master-sysctl:
+        labels:
+            io.rancher.container.start_once: true
+        network_mode: none
+        image: rawmind/alpine-sysctl:0.1
+        privileged: true
+        environment:
+            - "SYSCTL_KEY=vm.max_map_count"
+            - "SYSCTL_VALUE=262144"
+    elasticsearch-master:
+        labels:
+            io.rancher.scheduler.affinity:container_label_soft_ne: io.rancher.stack_service.name=$${stack_name}/$${service_name}
+            io.rancher.container.hostname_override: container_name
+            io.rancher.sidekicks: elasticsearch-master-config,elasticsearch-master-sysctl
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.6.0
+        environment:
+            - "cluster.name=${cluster_name}"
+            - "node.name=$${HOSTNAME}"
+            - "bootstrap.memory_lock=true"
+            - "xpack.security.enabled=false"
+            - "ES_JAVA_OPTS=-Xms${master_heap_size} -Xmx${master_heap_size}"
+            - "discovery.zen.ping.unicast.hosts=elasticsearch-master"
+            - "discovery.zen.minimum_master_nodes=${minimum_master_nodes}"
+            - "node.master=true"
+            - "node.data=false"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        mem_limit: ${master_mem_limit}
+        mem_swappiness: 0
+        cap_add:
+            - IPC_LOCK
+        volumes:
+            - elasticsearch-master-volume:/usr/share/elasticsearch/data
+        volumes_from:
+            - elasticsearch-master-config
+
+    elasticsearch-data-config:
+        labels:
+            io.rancher.container.start_once: true
+        network_mode: none
+        image: adopteunops/elasticsearch-rancher-config:latest
+    elasticsearch-data-sysctl:
+        labels:
+            io.rancher.container.start_once: true
+        network_mode: none
+        image: rawmind/alpine-sysctl:0.1
+        privileged: true
+        environment:
+            - "SYSCTL_KEY=vm.max_map_count"
+            - "SYSCTL_VALUE=262144"
+    elasticsearch-data:
+        labels:
+            io.rancher.scheduler.affinity:container_label_soft_ne: io.rancher.stack_service.name=$${stack_name}/$${service_name}
+            io.rancher.container.hostname_override: container_name
+            io.rancher.sidekicks: elasticsearch-data-config,elasticsearch-data-sysctl
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.6.0
+        environment:
+            - "cluster.name=${cluster_name}"
+            - "node.name=$${HOSTNAME}"
+            - "bootstrap.memory_lock=true"
+            - "xpack.security.enabled=false"
+            - "discovery.zen.ping.unicast.hosts=elasticsearch-master"
+            - "ES_JAVA_OPTS=-Xms${data_heap_size} -Xmx${data_heap_size}"
+            - "node.master=false"
+            - "node.data=true"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        mem_limit: ${data_mem_limit}
+        mem_swappiness: 0
+        cap_add:
+            - IPC_LOCK
+        volumes:
+            - elasticsearch-data-volume:/usr/share/elasticsearch/data
+        volumes_from:
+            - elasticsearch-data-config
+        links:
+            - elasticsearch-master
+
+    elasticsearch-client-config:
+        labels:
+            io.rancher.container.start_once: true
+        network_mode: none
+        image: adopteunops/elasticsearch-rancher-config:latest
+    elasticsearch-client-sysctl:
+        labels:
+            io.rancher.container.start_once: true
+        network_mode: none
+        image: rawmind/alpine-sysctl:0.1
+        privileged: true
+        environment:
+            - "SYSCTL_KEY=vm.max_map_count"
+            - "SYSCTL_VALUE=262144"
+    elasticsearch-client:
+        labels:
+            io.rancher.scheduler.affinity:container_label_soft_ne: io.rancher.stack_service.name=$${stack_name}/$${service_name}
+            io.rancher.container.hostname_override: container_name
+            io.rancher.sidekicks: elasticsearch-client-config,elasticsearch-client-sysctl
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.6.0
+        environment:
+            - "cluster.name=${cluster_name}"
+            - "node.name=$${HOSTNAME}"
+            - "bootstrap.memory_lock=true"
+            - "xpack.security.enabled=false"
+            - "discovery.zen.ping.unicast.hosts=elasticsearch-master"
+            - "ES_JAVA_OPTS=-Xms${client_heap_size} -Xmx${client_heap_size}"
+            - "node.master=false"
+            - "node.data=false"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        mem_limit: ${client_mem_limit}
+        mem_swappiness: 0
+        cap_add:
+            - IPC_LOCK
+        volumes:
+            - elasticsearch-client-volume:/usr/share/elasticsearch/data
+        volumes_from:
+            - elasticsearch-client-config
+        links:
+            - elasticsearch-master
+
+    elasticsearch-setup:
+        labels:
+            io.rancher.container.start_once: true
+        image: adopteunops/elasticsearch-rancher-config:latest
+        links:
+            - elasticsearch-master
+
+volumes:
+  elasticsearch-master-volume:
+    driver: ${VOLUME_DRIVER}
+    per_container: true
+  elasticsearch-data-volume:
+    driver: ${VOLUME_DRIVER}
+    per_container: true
+  elasticsearch-client-volume:
+    driver: ${VOLUME_DRIVER}
+    per_container: true
