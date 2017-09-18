@@ -143,9 +143,9 @@ services:
     elasticsearch-setup:
         labels:
             io.rancher.container.start_once: true
-        image: adopteunops/elasticsearch-rancher-config:latest
+        image: adopteunops/elasticsearch-rancher-setup:latest
         links:
-            - elasticsearch-master
+            - "elasticsearch-master:elasticsearch"
 
 volumes:
   elasticsearch-master-volume:
