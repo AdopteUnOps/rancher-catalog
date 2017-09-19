@@ -135,6 +135,5 @@ services:
 
   elasticsearch-setup:
     metadata:
-      template:
-        default-template: |
-          ${index_template}
+      template: |
+        ${index_template}
