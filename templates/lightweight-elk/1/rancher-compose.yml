@@ -1,0 +1,138 @@
+version: '2'
+catalog:
+    name: "Lightweight-ELK"
+    version: "v5.6.0.0"
+    description: "Provide a lightweight-ELK stack"
+    questions:
+        - variable: "elasticsearch_heap_size"
+          type: "string"
+          required: true
+          label: "Heap size (master nodes)"
+          description: "Heap size to be allocated for Java (master nodes)"
+          default: "512m"
+
+        - variable: "elasticsearch_mem_limit"
+          type: "int"
+          required: true
+          label: "Memory limit in byte (master nodes)"
+          description: "Memory limit in Byte per elasticsearch container. AT LEAST double the heap size! (master nodes)"
+          default: 1073741824
+
+        - variable: "elasticsearch_nodes"
+          type: "int"
+          required: true
+          label: "# of elasticsearch Nodes"
+          description: "Sets initial scale of elasticsearch cluster"
+          default: 1
+
+        - variable: "VOLUME_DRIVER"
+          description: "The VOLUME driver to associate with this server"
+          label: "VOLUME Driver"
+          required: true
+          default: "local"
+          type: enum
+          options:
+            - local
+            - rancher-nfs
+            - rancher-efs
+            - rancher-ebs
+
+        - variable: "logstash_inputs"
+          description: |
+            Logstash collection tier inputs. These will be added
+            directly to input { } section of logstash.conf
+          label: "Logstash inputs"
+          type: "multiline"
+          required: true
+          default: |
+            udp {
+              port => 5000
+              codec => "json"
+            }
+            file {
+              path => "/host/var/log/kern.log"
+              type => "kernel"
+            }
+
+        - variable: "logstash_filters"
+          description: |
+            Logstash indexing tier filters. These will be added
+            directly to filter { } section of logstash.conf
+          label: "Logstash filters"
+          type: "multiline"
+          required: false
+          default: |
+            if "kernel" in [type] {
+              grok {  # kernel logs
+                match => {"message" => "%{SYSLOGTIMESTAMP:timestamp}.*kernel: \[.*\] %{GREEDYDATA:message}"}
+                overwrite => [ "message" ]
+              }
+            }
+
+            if "kernel" not in [type] {
+              mutate {
+                rename => { "docker.id" => "container_id" }
+                rename => { "docker.name" => "container_name" }
+                rename => { "docker.image" => "docker_image" }
+                rename => { "docker.hostname" => "docker_hostname" }
+              }
+            }
+
+
+        - variable: "logstash_outputs"
+          description: |
+            Logstash indexing tier outputs. These will be added
+            directly to output { } section of logstash.conf
+          label: "Logstash outputs"
+          type: "multiline"
+          required: true
+          default: |
+            elasticsearch {
+              hosts => ["elasticsearch.rancher.internal:9200"]
+            }
+
+services:
+  redis:
+    scale: 1
+    start_on_create: true
+    health_check:
+      response_timeout: 2000
+      healthy_threshold: 2
+      port: 6379
+      unhealthy_threshold: 3
+      initializing_timeout: 60000
+      interval: 2000
+      strategy: recreate
+      reinitializing_timeout: 60000
+
+  logstash-indexer:
+    metadata:
+      logstash:
+        inputs: |
+          redis {
+            host => "redis"
+            port => "6379"
+            data_type => "list"
+            key => "logstash"
+          }
+        filters: |
+          ${logstash_filters}
+        outputs: |
+          ${logstash_outputs}
+
+  logstash-collector:
+    metadata:
+      logstash:
+        inputs: |
+          ${logstash_inputs}
+        outputs: |
+          redis {
+            host => "redis"
+            port => "6379"
+            data_type => "list"
+            key => "logstash"
+          }
+
+  elasticsearch:
+    scale: ${elasticsearch_nodes}
+    retain_ip: true
