@@ -1,0 +1,4 @@
+name: "Kibana"
+description: "Visualization dashboard"
+version: "5.5.2"
+category: ELK

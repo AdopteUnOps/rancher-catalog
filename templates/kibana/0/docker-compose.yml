@@ -1,0 +1,20 @@
+version: '2'
+services:
+    kibana-config:
+        labels:
+            io.rancher.container.start_once: true
+        network_mode: none
+        image: adopteunops/kibana-rancher-config:latest
+    kibana:
+        labels:
+            io.rancher.scheduler.affinity:container_label_soft_ne: io.rancher.stack_service.name=$${stack_name}/$${service_name}
+            io.rancher.container.hostname_override: container_name
+            io.rancher.sidekicks: kibana-config
+        image: docker.elastic.co/kibana/kibana:5.5.2
+        command: /scripts/stratup.sh
+        stdin_open: true
+        tty: true
+        volumes_from:
+            - kibana-config
+        external_links:
+          - ${elasticsearch_source}:elasticsearch

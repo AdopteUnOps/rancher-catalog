@@ -1,0 +1,21 @@
+version: '2'
+catalog:
+  name: "Kibana"
+  version: "5.5.2"
+  description: "Kibana: Explore & Visualize Your Data"
+  questions:
+    - variable: "elasticsearch_source"
+      description: "Link to elasticsearch service or stack/service"
+      label: "Elasticsearch source"
+      type: "service"
+      required: true
+      default: "elasticsearch/elasticsearch-client"
+    - variable: "plugins_list"
+      description: "Url of plugins to fetch"
+      label: "Plugins lists"
+      type: "multiline"
+services:
+  kibana:
+    metadata:
+      plugins: |
+        ${plugins_list}
