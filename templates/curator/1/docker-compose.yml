@@ -1,0 +1,12 @@
+curator:
+  external_links:
+  - ${elasticsearch_link}:elasticsearch
+  environment:
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
+      ELASTICSEARCH_USERNAME: ${elasticsearch_username}
+      ELASTICSEARCH_PASSWORD: ${elasticsearch_password}
+      CRON_EXPR: ${cron_expr}
+  image: adopteunops/elasticsearch-curator:latest
+  tty: true
+  stdin_open: true

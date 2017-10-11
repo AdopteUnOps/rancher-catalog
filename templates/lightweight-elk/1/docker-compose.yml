@@ -138,6 +138,15 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true
 
+  curator:
+    links:
+    - 'elasticsearch:'
+    environment:
+      CRON_EXPR: ${cron_expr}
+    image: adopteunops/elasticsearch-curator:latest
+    tty: true
+    stdin_open: true
+
   kibana:
     environment:
       elasticsearch.url: "http://elasticsearch:9200"
