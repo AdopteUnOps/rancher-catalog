@@ -143,7 +143,7 @@ services:
     - 'elasticsearch:'
     environment:
       CRON_EXPR: ${cron_expr}
-    image: adopteunops/elasticsearch-curator:latest
+    image: adopteunops/elasticsearch-curator:1.0.0
     tty: true
     stdin_open: true
 
