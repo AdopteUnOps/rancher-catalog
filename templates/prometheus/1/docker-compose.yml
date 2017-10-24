@@ -1,7 +1,7 @@
 version: '2'
 services:
   prometheus-rancher-scraper:
-    image: adopteunops/prom-rancher-sd:1.0.0
+    image: adopteunops/prom-rancher-sd:1.0.1
   prometheus-rancher-exporter:
     labels:
       io.rancher.container.hostname_override: container_name
