@@ -1,7 +1,18 @@
 .catalog:
   name: Nexus
   version: 3.6.0
-  description: |
-    A repository manager.
+  description: "A repository manager"
+  questions:
+      - variable: "VOLUME_DRIVER"
+        description: "The VOLUME driver to associate with this server"
+        label: "VOLUME Driver"
+        required: true
+        default: "local"
+        type: enum
+        options:
+          - local
+          - rancher-nfs
+          - rancher-efs
+          - rancher-ebs
 nexus:
   scale: 1
