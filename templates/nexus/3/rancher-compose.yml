@@ -1,0 +1,7 @@
+.catalog:
+  name: Nexus
+  version: 3.6.0
+  description: |
+    A repository manager.
+nexus:
+  scale: 1

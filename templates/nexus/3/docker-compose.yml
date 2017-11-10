@@ -1,0 +1,17 @@
+version: '2'
+services:
+  nexus:
+    image: sonatype/nexus3:3.6.0
+    labels:
+      io.rancher.container.hostname_override: container_name
+    environment:
+      MAX_HEAP: 768m
+    ports:
+      - 8081:8081/tcp
+    volumes:
+      - nexus-data:/nexus-data
+
+volumes:
+  nexus-data:
+    driver: ${VOLUME_DRIVER}
+    per_container: true
